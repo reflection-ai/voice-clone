@@ -32,5 +32,8 @@ voice clone via [eleven-labs](https://elevenlabs.io/) using existing youtube vid
         - returns queue length
     - `POST /base`
         - take in request
-        - example requests in `pre-2023-hormozi-example.json` and `2023-hormozi-example.json`
-# voice-clone
+        - example requests in `examples/`
+
+### TODOs
+[] Package structure
+[] Testing
