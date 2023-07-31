@@ -1,75 +1,127 @@
-text = """
-How to Do Great Work
-
-July 2023
-
-If you collected lists of techniques for doing great work in a lot of different fields, what would the intersection look like? I decided to find out by making it.
-
-Partly my goal was to create a guide that could be used by someone working in any field. But I was also curious about the shape of the intersection. And one thing this exercise shows is that it does have a definite shape; it's not just a point labelled "work hard."
-
-The following recipe assumes you're very ambitious.
-
-The first step is to decide what to work on. The work you choose needs to have three qualities: it has to be something you have a natural aptitude for, that you have a deep interest in, and that offers scope to do great work.
-
-In practice you don't have to worry much about the third criterion. Ambitious people are if anything already too conservative about it. So all you need to do is find something you have an aptitude for and great interest in. [1]
-
-That sounds straightforward, but it's often quite difficult. When you're young you don't know what you're good at or what different kinds of work are like. Some kinds of work you end up doing may not even exist yet. So while some people know what they want to do at 14, most have to figure it out.
-
-The way to figure out what to work on is by working. If you're not sure what to work on, guess. But pick something and get going. You'll probably guess wrong some of the time, but that's fine. It's good to know about multiple things; some of the biggest discoveries come from noticing connections between different fields.
-
-Develop a habit of working on your own projects. Don't let "work" mean something other people tell you to do. If you do manage to do great work one day, it will probably be on a project of your own. It may be within some bigger project, but you'll be driving your part of it.
-
-What should your projects be? Whatever seems to you excitingly ambitious. As you grow older and your taste in projects evolves, exciting and important will converge. At 7 it may seem excitingly ambitious to build huge things out of Lego, then at 14 to teach yourself calculus, till at 21 you're starting to explore unanswered questions in physics. But always preserve excitingness.
-
-There's a kind of excited curiosity that's both the engine and the rudder of great work. It will not only drive you, but if you let it have its way, will also show you what to work on.
-
-What are you excessively curious about — curious to a degree that would bore most other people? That's what you're looking for.
-
-Once you've found something you're excessively interested in, the next step is to learn enough about it to get you to one of the frontiers of knowledge. Knowledge expands fractally, and from a distance its edges look smooth, but once you learn enough to get close to one, they turn out to be full of gaps.
-
-The next step is to notice them. This takes some skill, because your brain wants to ignore such gaps in order to make a simpler model of the world. Many discoveries have come from asking questions about things that everyone else took for granted. [2]
-
-If the answers seem strange, so much the better. Great work often has a tincture of strangeness. You see this from painting to math. It would be affected to try to manufacture it, but if it appears, embrace it.
-
-Boldly chase outlier ideas, even if other people aren't interested in them — in fact, especially if they aren't. If you're excited about some possibility that everyone else ignores, and you have enough expertise to say precisely what they're all overlooking, that's as good a bet as you'll find. [3]
-
-Four steps: choose a field, learn enough to get to the frontier, notice gaps, explore promising ones. This is how practically everyone who's done great work has done it, from painters to physicists.
-"""
-
-import sounddevice as sd
-from scipy.io.wavfile import write
+import os
 import time
-import threading
+import audio_helper
+from youtube_to_audio import process_audio
+from elevenlabs import clone, generate, play, save
+import logging
 
-# Function for recording
-def record_audio(duration, fs):
-    myrecording = sd.rec(int(duration * fs), samplerate=fs, channels=2)
-    sd.wait()
-    write('output.wav', fs, myrecording)
+log_level = os.environ.get('LOG_LEVEL', 'INFO')
+logging.basicConfig(level=getattr(logging, log_level),
+                    format='%(asctime)s %(levelname)s %(message)s')
+logger = logging.getLogger()
 
-# Function for timer
-def timer(duration):
-    for i in range(duration, 0, -1):
-        print(f"Recording... {i} seconds left.", end='\r')
-        time.sleep(1)
+def main(video_urls, voice_name, filename, description=""):
+    # Start timing
+    start_time = time.time()
+
+    voice_files = []
+    for index, video_url in enumerate(video_urls):
+        logger.info(f"Processing video {index + 1}/{len(video_urls)}...")
+        processing_start_time = time.time()
+        folder_name = f"audio_clips/{voice_name}_{index}_{processing_start_time}"
+        process_audio(video_url, folder_name, filename)
+
+        # Add the voice files from this folder to the list
+        voice_files.extend([
+            os.path.join(folder_name, f) 
+            for f in os.listdir(folder_name) 
+            if f.startswith(filename) and "_part" in f
+        ])
+        logger.info(f"Finished video {index + 1}/{len(video_urls)}. Time taken: {time.time() - processing_start_time} seconds")
+
+    # Total files before filtering
+    total_files_before = len(voice_files)
+    total_size_before = sum(os.path.getsize(f) for f in voice_files)
+
+    # Sort voice files by size, filter out any greater than 10MB, and take the top 25
+    voice_files = sorted(voice_files, key=os.path.getsize, reverse=True)
+    voice_files = [f for f in voice_files if os.path.getsize(f) <= 10 * 1024 * 1024][:25]
+
+    # Total files after filtering
+    total_files_after = len(voice_files)
+    total_size_after = sum(os.path.getsize(f) for f in voice_files)
+
+    logger.info(f"Before filtering: {total_files_before} files, {total_size_before} bytes")
+    logger.info(f"After filtering: {total_files_after} files, {total_size_after} bytes")
+
+    logger.info("Cloning voice...")
+    voice = clone(
+        name=voice_name,
+        description=description,
+        files=voice_files,
+    )
+
+    logger.info("Generating audio...")
+    audio = generate("this is a test, how do I sound?", voice=voice)
+
+    logger.info("Saving audio...")
+    save(audio, "./output.mp3")
+
+    # End timing and print elapsed time
+    end_time = time.time()
+    logger.info(f"Completed in {end_time - start_time} seconds.")
 
 if __name__ == "__main__":
-    duration = 120  # Max duration in seconds
-    fs = 44100  # Sample rate
+    # video_urls = [
+    #     "https://www.youtube.com/watch?v=pWbSl7d0tEc", # https://www.youtube.com/watch?v=pWbSl7d0tEc
+    #     "https://www.youtube.com/watch?v=WRW7eY6K4Jo", # They lied to you: Why Punishment DOESN'T WORK..
+    #     "https://www.youtube.com/watch?v=FNJpJG-sSXM", # Biden's tax plan.....
+    #     "https://www.youtube.com/watch?v=-Pz0NpcILOY", # increased wealth EXPONENTIALLY
+    #     "https://www.youtube.com/watch?v=RBR4BwOVNvs", # solved everything
+    #     "https://www.youtube.com/watch?v=YaNX49ygr0I", # how to get what you want
+    #     "https://www.youtube.com/watch?v=Ec41cSp_tWc", # why direct response marketers get rich not wealth
+    #     "https://www.youtube.com/watch?v=kW2vDMAmlPI", # $100M CEO: How I know who to trust...
+    #     "https://www.youtube.com/watch?v=_gcqwupsza8", # I sold my company for $46,200,000 at age 32...7 LESSONS I learned..
+    #     "https://www.youtube.com/watch?v=o7R_K6LwKNk", # $100M CEO: "Why therapists failed me..." [language warning]
+    #     "https://www.youtube.com/watch?v=o7R_K6LwKNk", # $100M CEO: "Why therapists failed me..." [language warning]
+    #     "https://www.youtube.com/watch?v=F3NyhOtRpOE", # $100M CEO explains: How to CREATE a $100,000,000 product..[leaked training]
+    #     "https://www.youtube.com/watch?v=w5g0JiO7OdE", # I paid 0% tax on 56% of my income...here's how..
+    #     "https://www.youtube.com/watch?v=pWbSl7d0tEc", # I sold 8 businesses by age 32 [here’s how]
+    #     "https://www.youtube.com/watch?v=oi7bnS8uyJM", # 30 Minutes of sales training that will explode your business in 2022
+    #     "https://www.youtube.com/watch?v=3P1XjUvo1b4", # I cracked Starbucks RECURRING SALES model and built a FORTUNE...
+    #     "https://www.youtube.com/watch?v=_qspvJAq34M", # How I got 700 people to pay me $40,000 each...no bs..
+    #     "https://www.youtube.com/watch?v=kULFeI3LRYk", # I SPENT $100,000 on courses, so you don't have to...
+    #     "https://www.youtube.com/watch?v=C_SgvSvJZdk", # 8 Lessons Charlie Munger Taught Me To Build $112M Business
+    #     "https://www.youtube.com/watch?v=Q2VUuUGfpNY", # 6 Hacks To Make More Money [Increase LTV] Without More Customers
+    #     "https://www.youtube.com/watch?v=4LeHKDGmEIQ", # This is Why You're Not Happy - Eye Opening
+    #     "https://www.youtube.com/watch?v=Fy8XX8EuEnA", # I Made $31,714,980 in 2020 (Here's What I Learned)
+    #     "https://www.youtube.com/watch?v=cemduJKQl5w", # Recruiting and Hiring Tips - How to Hire The Best Employees
+    #     "https://www.youtube.com/watch?v=kULFeI3LRYk", # I SPENT $100,000 on courses, so you don't have to...
+    #  ]  
+    # video_urls = [
+    #     "https://www.youtube.com/watch?v=60_7PU9JDIw", # I Convinced 10,000 People To Promote My Book For Me (For Free)
+    #     "https://www.youtube.com/watch?v=5cOwh-8scu8", # Make Money Online (Without Destroying Your Reputation)
+    #     "https://www.youtube.com/watch?v=7NMH1oAkgLY", # Giving Away Free Stuff Will Make You Rich
+    #     "https://www.youtube.com/watch?v=lJF__n_34ew", # My 12 Hour Work Day (in 15 Minutes)
+    #     "https://www.youtube.com/watch?v=Nh8Oc7ERdIU", # How to Get Ahead of 99% of People
+    #     "https://www.youtube.com/watch?v=zZyRg4Fzabk", # HUGE ANNOUNCEMENT
+    #     "https://www.youtube.com/watch?v=VPre_XMgKjs", # Why MrBeast Will be Worth $100 Billion
+    #     "https://www.youtube.com/watch?v=YFA8AS5Cu2w", # watch this if you're tired of being broke
+    #     "https://www.youtube.com/watch?v=1taVrxMFjaY&t=179s", # NO NEW FRIENDS (My "Extreme Views" on Friendship)
+    #     "https://www.youtube.com/watch?v=9gVdCR7W8o8", # The REAL Reason Your Business Isn't Growing
+    #     "https://www.youtube.com/watch?v=6ySRKgXBcO0&t=925s", # Day In The Life of Alex Hormozi
+    #     "https://www.youtube.com/watch?v=fxyhIXZ6Yog", # The Alex Hormozi Diet (REVEALED)
+    #     "https://www.youtube.com/watch?v=oTQPxPFROck&t=289s", # How to Build a LEGIT Online Course (2023)
+    #     "https://www.youtube.com/watch?v=KQuyQpFANpA", # I Solved Three $100,000,000 Business Problems
+    #     "https://www.youtube.com/watch?v=qLM5G7N3l3I", # 3 Ways to Do What You Love (and get wealthy too)
+    #     "https://www.youtube.com/watch?v=SYkwtqFoRcM", # How to go ALL IN on your side hustle..
+    #     "https://www.youtube.com/watch?v=zBZHWrvjD8Y", # How I Set Goals That ACTUALLY MAKE MONEY
+    #     "https://www.youtube.com/watch?v=LVM89ik-7Kw", # "I'm Broke, What Should I Sell?"
+    #     "https://www.youtube.com/watch?v=ueJg14gQLuc", # The SEASON OF NO (What it Takes to Win)
+    #     "https://www.youtube.com/watch?v=vZfatNSouDQ&t=179s", # Hardcore Business Lessons I Learned From A Dealer
+    #     "https://www.youtube.com/watch?v=zNJ5JzEJgyo", # Why You Shouldn't Copy Me
+    #     "https://www.youtube.com/watch?v=_PCCqqv2pig", # HOW TO GET WHAT YOU WANT (6 Proven Methods)
+    #     "https://www.youtube.com/watch?v=BHMeYaHEMpc", # How to Grow ANY Local Business (my framework)
+    #     "https://www.youtube.com/watch?v=ULGT0Qpglek&t=624s", # 17 Conversations That Made Me A Millionaire
+    #     "https://www.youtube.com/watch?v=-wnnwCqGeNc", # The #1 Reason Young People Stay Poor
+    #     "https://www.youtube.com/watch?v=0mqqbuM9sAk", # I Built 4 Businesses In A Row To Show It's Not Luck
+    #     "https://www.youtube.com/watch?v=ONV__y1z7MI", # How The World’s RICHEST Man Made His Money
+    # ]
+    video_urls = [
+        "https://www.youtube.com/watch?v=5cOwh-8scu8", # Make Money Online (Without Destroying Your Reputation)
+    ]
 
-    # Start timer and recording on separate threads
-    # timer_thread = threading.Thread(target=timer, args=(duration,))
-    record_thread = threading.Thread(target=record_audio, args=(duration, fs))
+    voice_name = "hormozi_test"
+    filename = "hormozi_test"
 
-    # timer_thread.start()
-    record_thread.start()
-
-    print(text)
-
-    # Allow user to stop recording after a minute
-    time.sleep(6)
-    while True:
-        inp = input("Press 's' to stop recording: ")
-        if inp.lower() == 's':
-            sd.stop()
-            break
+    main(video_urls, voice_name, filename)

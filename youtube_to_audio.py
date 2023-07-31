@@ -5,6 +5,12 @@ from pydub import AudioSegment
 from pytube import YouTube
 from urllib.parse import urlparse
 from pydub.utils import mediainfo
+import logging
+
+log_level = os.environ.get('LOG_LEVEL', 'INFO')
+logging.basicConfig(level=getattr(logging, log_level),
+                    format='%(asctime)s %(levelname)s %(message)s')
+logger = logging.getLogger()
 
 AUDIO_FILE_TYPE = "mp4"
 
@@ -18,7 +24,6 @@ def is_valid_url(url):
 def download_audio(url, filename):
     yt = YouTube(url)
     filename_timestamped = f"{filename}_{time.strftime('%Y%m%d%H%M%S')}"
-    # yt.streams.filter(only_audio=True).first().download(filename=f"{filename_timestamped}{AUDIO_FILE_TYPE}")
     yt.streams.filter(only_audio=True).first().download(filename=f"{filename_timestamped}.{AUDIO_FILE_TYPE}")
     return filename_timestamped
 
@@ -49,21 +54,13 @@ def split_file(file_path, max_size=7 * 1024 * 1024):  # 7MB
         start = end
         end += max_size_in_milliseconds  # Increment the end point
 
-    print(f"File split into {counter} parts.")
+    logger.info(f"File split into {counter} parts.")
 
-if __name__ == "__main__":
-    if len(sys.argv) < 3 or len(sys.argv) > 4:
-        print("Usage: python script.py <YouTube_URL> <folder_path> [<filename>]")
-        sys.exit(1)
-
-    video_url = sys.argv[1]
-
+def process_audio(video_url, folder_path, filename):
     if not is_valid_url(video_url):
-        print("You provided an invalid URL.")
-        sys.exit(1)
+        logger.info("You provided an invalid URL.")
+        return
 
-    folder_path = sys.argv[2]
-    filename = sys.argv[3] if len(sys.argv) == 4 else 'downloaded_audio'
     filename = os.path.join(folder_path, filename)
 
     if not os.path.exists(folder_path):
@@ -73,7 +70,20 @@ if __name__ == "__main__":
 
     filename_with_ext = f"{filename}.{AUDIO_FILE_TYPE}"
 
-    print(f"File size of {filename_with_ext} is {get_file_size(filename_with_ext)} bytes.")
+    logger.info(f"File size of {filename_with_ext} is {get_file_size(filename_with_ext)} bytes.")
 
     if get_file_size(filename_with_ext) > 7 * 1024 * 1024:  # File size greater than 7MB
         split_file(filename_with_ext)
+    else:
+        os.rename(filename_with_ext, f"{filename}_part0.{AUDIO_FILE_TYPE}")
+
+if __name__ == "__main__":
+    if len(sys.argv) < 3 or len(sys.argv) > 4:
+        logger.info("Usage: python script.py <YouTube_URL> <folder_path> [<filename>]")
+        sys.exit(1)
+
+    video_url = sys.argv[1]
+    folder_path = sys.argv[2]
+    filename = sys.argv[3] if len(sys.argv) == 4 else 'downloaded_audio'
+
+    process_audio(video_url, folder_path, filename)

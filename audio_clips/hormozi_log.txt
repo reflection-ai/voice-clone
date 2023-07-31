@@ -1,0 +1,89 @@
+Processing video 1/24...
+File size of hormozi_0/hormozi_20230730113026.mp4 is 15460049 bytes.
+File split into 3 parts.
+Finished video 1/24. Time taken: 23.321386098861694 seconds
+Processing video 2/24...
+File size of hormozi_1/hormozi_20230730113049.mp4 is 3078657 bytes.
+Finished video 2/24. Time taken: 1.5865838527679443 seconds
+Processing video 3/24...
+File size of hormozi_2/hormozi_20230730113051.mp4 is 7489701 bytes.
+File split into 2 parts.
+Finished video 3/24. Time taken: 11.847190380096436 seconds
+Processing video 4/24...
+File size of hormozi_3/hormozi_20230730113103.mp4 is 6216008 bytes.
+Finished video 4/24. Time taken: 1.7126615047454834 seconds
+Processing video 5/24...
+File size of hormozi_4/hormozi_20230730113104.mp4 is 8218784 bytes.
+File split into 2 parts.
+Finished video 5/24. Time taken: 12.711696147918701 seconds
+Processing video 6/24...
+File size of hormozi_5/hormozi_20230730113117.mp4 is 5863409 bytes.
+Finished video 6/24. Time taken: 2.273242235183716 seconds
+Processing video 7/24...
+File size of hormozi_6/hormozi_20230730113119.mp4 is 5931407 bytes.
+Finished video 7/24. Time taken: 2.4067223072052 seconds
+Processing video 8/24...
+File size of hormozi_7/hormozi_20230730113122.mp4 is 5212628 bytes.
+Finished video 8/24. Time taken: 2.011204242706299 seconds
+Processing video 9/24...
+File size of hormozi_8/hormozi_20230730113124.mp4 is 12102135 bytes.
+File split into 2 parts.
+Finished video 9/24. Time taken: 19.091145038604736 seconds
+Processing video 10/24...
+File size of hormozi_9/hormozi_20230730113143.mp4 is 5775866 bytes.
+Finished video 10/24. Time taken: 1.9034559726715088 seconds
+Processing video 11/24...
+File size of hormozi_10/hormozi_20230730113145.mp4 is 5775866 bytes.
+Finished video 11/24. Time taken: 1.9594192504882812 seconds
+Processing video 12/24...
+File size of hormozi_11/hormozi_20230730113147.mp4 is 17662666 bytes.
+File split into 3 parts.
+Finished video 12/24. Time taken: 25.055639505386353 seconds
+Processing video 13/24...
+File size of hormozi_12/hormozi_20230730113212.mp4 is 12934668 bytes.
+File split into 2 parts.
+Finished video 13/24. Time taken: 20.25082755088806 seconds
+Processing video 14/24...
+File size of hormozi_13/hormozi_20230730113232.mp4 is 15460049 bytes.
+File split into 3 parts.
+Finished video 14/24. Time taken: 23.720816373825073 seconds
+Processing video 15/24...
+File size of hormozi_14/hormozi_20230730113256.mp4 is 11429085 bytes.
+File split into 2 parts.
+Finished video 15/24. Time taken: 20.322510480880737 seconds
+Processing video 16/24...
+File size of hormozi_15/hormozi_20230730113316.mp4 is 4608850 bytes.
+Finished video 16/24. Time taken: 1.8448987007141113 seconds
+Processing video 17/24...
+File size of hormozi_16/hormozi_20230730113318.mp4 is 6817570 bytes.
+Finished video 17/24. Time taken: 2.1765458583831787 seconds
+Processing video 18/24...
+File size of hormozi_17/hormozi_20230730113320.mp4 is 6425240 bytes.
+Finished video 18/24. Time taken: 1.9396963119506836 seconds
+Processing video 19/24...
+File size of hormozi_18/hormozi_20230730113322.mp4 is 7367771 bytes.
+File split into 2 parts.
+Finished video 19/24. Time taken: 11.92718768119812 seconds
+Processing video 20/24...
+File size of hormozi_19/hormozi_20230730113334.mp4 is 4107473 bytes.
+Finished video 20/24. Time taken: 2.2892205715179443 seconds
+Processing video 21/24...
+File size of hormozi_20/hormozi_20230730113336.mp4 is 5157193 bytes.
+Finished video 21/24. Time taken: 2.080240488052368 seconds
+Processing video 22/24...
+File size of hormozi_21/hormozi_20230730113338.mp4 is 23183615 bytes.
+File split into 4 parts.
+Finished video 22/24. Time taken: 34.55205845832825 seconds
+Processing video 23/24...
+File size of hormozi_22/hormozi_20230730113413.mp4 is 11243569 bytes.
+File split into 2 parts.
+Finished video 23/24. Time taken: 18.287234783172607 seconds
+Processing video 24/24...
+File size of hormozi_23/hormozi_20230730113431.mp4 is 6425240 bytes.
+Finished video 24/24. Time taken: 2.3384974002838135 seconds
+Before filtering: 27 files, 140269645 bytes
+After filtering: 25 files, 140094067 bytes
+Cloning voice...
+Generating audio...
+Saving audio...
+Completed in 642.2545545101166 seconds.
