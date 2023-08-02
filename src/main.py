@@ -1,9 +1,11 @@
+from dotenv import load_dotenv
+load_dotenv()
 import os
 import time
-import audio_helper
-from youtube_to_audio import process_audio
-from elevenlabs import clone, generate, play, save
+from elevenlabs import clone, generate, save
 import logging
+import src.audio_helper
+from src.youtube_to_audio import process_audio
 
 log_level = os.environ.get('LOG_LEVEL', 'INFO')
 logging.basicConfig(level=getattr(logging, log_level),

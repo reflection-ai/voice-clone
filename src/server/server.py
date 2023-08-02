@@ -1,7 +1,7 @@
 from flask import Flask, request
 from queue import Queue
 from threading import Lock, Thread
-from main import main
+from src.main import main
 import threading
 import os
 import logging
