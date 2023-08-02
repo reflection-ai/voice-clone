@@ -54,10 +54,11 @@ def main(video_urls, voice_name, filename, description=""):
     )
 
     logger.info("Generating audio...")
-    audio = generate("this is a test, how do I sound?", voice=voice)
 
-    logger.info("Saving audio...")
-    save(audio, "./output.mp3")
+    if False:
+        audio = generate("this is a test, how do I sound?", voice=voice)
+        logger.info("Saving audio...")
+        save(audio, "./output.mp3")
 
     # End timing and print elapsed time
     end_time = time.time()
