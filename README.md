@@ -35,7 +35,7 @@ voice clone via [eleven-labs](https://elevenlabs.io/) using existing youtube vid
         - returns queue length
     - `POST /base`
         - take in request
-        - example requests in `examples/`
+        - example requests in `examples/requests`
 
 ### TODOs
 [] Package structure
