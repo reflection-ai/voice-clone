@@ -50,11 +50,11 @@ def main(video_urls, voice_name, filename, description=""):
     logger.info(f"After filtering: {total_files_after} files, {total_size_after} bytes")
 
     logger.info("Cloning voice...")
-    # voice = clone(
-    #     name=voice_name,
-    #     description=description,
-    #     files=voice_files,
-    # )
+    voice = clone(
+        name=voice_name,
+        description=description,
+        files=voice_files,
+    )
 
     logger.info("Generating audio...")
 
