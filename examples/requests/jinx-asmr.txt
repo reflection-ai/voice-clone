@@ -1,0 +1,19 @@
+{
+    "name": "Jinx ASMR",
+    "description": "Jinx from Arcane and League of Legends ASMR voice",
+    "youtube_links": [
+        // Arcane Jinx Roleplay [Jinx notices you💜] [Strangers to Friends] [The Last Drop] [ASMR]
+        // Cuddling Jinx in her Workshop "Thanks for being here💜" [Arcane] [ASMR Roleplay] [Falling Asleep]
+        // Jinx Confesses to You "I...really like you💜" [Arcane] [ASMR Roleplay] [First Kiss] [Love Confession]
+        // Jinx Gets Jealous "You're mine💜" [Arcane] [Reverse Comfort] [ASMR Roleplay] [Misunderstanding]
+        // Jinx Patches You Up "You gotta be more careful silly~" [Caring] [ASMR Roleplay] [Arcane] [Love You]
+        // Jinx Comforts You from a Nightmare💜 [Cuddles] [Soft Voice] [Positive Affirmations] [Roleplay]
+        // Jinx Wants Morning Cuddles 💜 [Silco Walks in] [Roleplay] [Sleepy Jinx]
+        // Jinx Sleeps Over at Your Place "I got you all to myself"💜 [First Sleepover] [Roleplay] [Arcane]
+        // Comforting Jinx from a Nightmare "Please don't leave me..." 💜[Reverse Comfort] [Roleplay] [Arcane]
+        // Surprising Jinx in her Workshop "You did all this...for me?" [Slow Dancing] [Date Night] [Roleplay]
+        // Jinx has a Surprise for You~ "I gotcha somethin~"💜[Roleplay] [Arcane] [Gift] [Marriage Talk?]
+        // Jinx Dresses you up to Meet "Dad" "Ohhhh you'll be fine~" [Roleplay] [Silco's...not mad?]        "", //
+        // Jinx Distracts You from Work "You've been working to hard" [Wholesome] [ASMR Roleplay] [Arcane]
+    ]
+}

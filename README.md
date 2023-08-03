@@ -30,6 +30,7 @@ voice clone via [eleven-labs](https://elevenlabs.io/) using existing youtube vid
 
 ### Server
 - Usage: `export PYTHONPATH=$PYTHONPATH:`pwd` && gunicorn -w 1 -b 0.0.0.0:8889 -c src/gunicorn_config.py src/server:app --timeout 30`
+    - Should only need to do `export PYTHONPATH=$PYTHONPATH:`pwd`` once
 - Routes
     - `GET /q`
         - returns queue length
