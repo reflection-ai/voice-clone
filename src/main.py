@@ -4,7 +4,7 @@ import os
 import time
 from elevenlabs import clone, generate, save
 import logging
-import src.audio_helper
+import src.eleven_api_setup # setsup API key
 from src.youtube_to_audio import process_audio
 
 log_level = os.environ.get('LOG_LEVEL', 'INFO')
@@ -20,8 +20,11 @@ def main(video_urls, voice_name, filename, description=""):
     for index, video_url in enumerate(video_urls):
         logger.info(f"Processing video {index + 1}/{len(video_urls)}...")
         processing_start_time = time.time()
-        folder_name = f"audio_clips/{voice_name}_{index}_{processing_start_time}"
+        folder_name = f"audio_clips/{voice_name}_{start_time}/{index}"
         process_audio(video_url, folder_name, filename)
+
+        with open(f"{folder_name}/video_url.txt", "w") as file:
+            file.write(video_url)
 
         # Add the voice files from this folder to the list
         voice_files.extend([
@@ -47,11 +50,11 @@ def main(video_urls, voice_name, filename, description=""):
     logger.info(f"After filtering: {total_files_after} files, {total_size_after} bytes")
 
     logger.info("Cloning voice...")
-    voice = clone(
-        name=voice_name,
-        description=description,
-        files=voice_files,
-    )
+    # voice = clone(
+    #     name=voice_name,
+    #     description=description,
+    #     files=voice_files,
+    # )
 
     logger.info("Generating audio...")
 

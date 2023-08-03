@@ -1,0 +1,30 @@
+{
+    "name": "Alex hormozi (pre 2023)",
+    "description": "Business personality youtuber, CEO Aquisition.com",
+    "youtube_links": [
+        // https://www.youtube.com/watch?v=pWbSl7d0tEc
+        // They lied to you: Why Punishment DOESN'T WORK..
+        // Biden's tax plan.....
+        // increased wealth EXPONENTIALLY
+        // solved everything
+        // how to get what you want
+        // why direct response marketers get rich not wealth
+        // $100M CEO: How I know who to trust...
+        // I sold my company for $46,200,000 at age 32...7 LESSONS I learned..
+        // $100M CEO: "Why therapists failed me..." [language warning]
+        // $100M CEO: "Why therapists failed me..." [language warning]
+        // $100M CEO explains: How to CREATE a $100,000,000 product..[leaked training]
+        // I paid 0% tax on 56% of my income...here's how..
+        // I sold 8 businesses by age 32 [here’s how]
+        // 30 Minutes of sales training that will explode your business in 2022
+        // I cracked Starbucks RECURRING SALES model and built a FORTUNE...
+        // How I got 700 people to pay me $40,000 each...no bs..
+        // I SPENT $100,000 on courses, so you don't have to...
+        // 8 Lessons Charlie Munger Taught Me To Build $112M Business
+        // 6 Hacks To Make More Money [Increase LTV] Without More Customers
+        // This is Why You're Not Happy - Eye Opening
+        // I Made $31,714,980 in 2020 (Here's What I Learned)
+        // Recruiting and Hiring Tips - How to Hire The Best Employees
+        // I SPENT $100,000 on courses, so you don't have to...
+    ]
+}

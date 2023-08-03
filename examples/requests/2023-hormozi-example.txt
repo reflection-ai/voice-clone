@@ -1,0 +1,33 @@
+{
+    "name": "Alex hormozi (2023)",
+    "description": "Business personality youtuber, CEO Aquisition.com",
+    "youtube_links": [
+        // I Convinced 10,000 People To Promote My Book For Me (For Free)
+        // Make Money Online (Without Destroying Your Reputation)
+        // Giving Away Free Stuff Will Make You Rich
+        // My 12 Hour Work Day (in 15 Minutes)
+        // How to Get Ahead of 99% of People
+        // HUGE ANNOUNCEMENT
+        // Why MrBeast Will be Worth $100 Billion
+        // watch this if you're tired of being broke
+        // NO NEW FRIENDS (My "Extreme Views" on Friendship)
+        // The REAL Reason Your Business Isn't Growing
+        // Day In The Life of Alex Hormozi
+        // The Alex Hormozi Diet (REVEALED)
+        // How to Build a LEGIT Online Course (2023)
+        // I Solved Three $100,000,000 Business Problems
+        // 3 Ways to Do What You Love (and get wealthy too)
+        // How to go ALL IN on your side hustle..
+        // How I Set Goals That ACTUALLY MAKE MONEY
+        // "I'm Broke, What Should I Sell?"
+        // The SEASON OF NO (What it Takes to Win)
+        // Hardcore Business Lessons I Learned From A Dealer
+        // Why You Shouldn't Copy Me
+        // HOW TO GET WHAT YOU WANT (6 Proven Methods)
+        // How to Grow ANY Local Business (my framework)
+        // 17 Conversations That Made Me A Millionaire
+        // The #1 Reason Young People Stay Poor
+        // I Built 4 Businesses In A Row To Show It's Not Luck
+        // How The World’s RICHEST Man Made His Money
+    ]
+}
