@@ -5,7 +5,7 @@ voice clone via [eleven-labs](https://elevenlabs.io/) using existing youtube vid
 # Features
 - script `src/main.py` 
 
-- gunicorn server `export PYTHONPATH=$PYTHONPATH:`pwd` && gunicorn -w 1 -b 0.0.0.0:8889 -c src/gunicorn_config.py src/server:app --timeout 30`
+- gunicorn server `export PYTHONPATH=$PYTHONPATH:`pwd` && gunicorn -w 1 -b 0.0.0.0:8889 -c src/server/gunicorn_config.py src.server.server:app --timeout 30`
     - queue requests
     - handle request sequentially
 
@@ -29,7 +29,7 @@ voice clone via [eleven-labs](https://elevenlabs.io/) using existing youtube vid
         - name of file and folder clips will be saved to
 
 ### Server
-- Usage: `export PYTHONPATH=$PYTHONPATH:`pwd` && gunicorn -w 1 -b 0.0.0.0:8889 -c src/gunicorn_config.py src/server:app --timeout 30`
+- Usage: `export PYTHONPATH=$PYTHONPATH:`pwd` && gunicorn -w 1 -b 0.0.0.0:8889 -c src.server.gunicorn_config.py src/server/server:app --timeout 30`
     - Should only need to do `export PYTHONPATH=$PYTHONPATH:`pwd`` once
 - Routes
     - `GET /q`

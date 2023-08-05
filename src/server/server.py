@@ -75,8 +75,6 @@ def create_voice_handler():
 
 
 if __name__ == "__main__":
-    # Start the voice_generator in a new thread
-    # Thread(target=voice_generator, args=(request_queue,)).start()
-
+    logger.info(f"APP START")
     # Run the Flask app in the main thread
     app.run()
