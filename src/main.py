@@ -5,7 +5,6 @@ import time
 from elevenlabs import clone, generate, save
 import logging
 import src.eleven_api_setup # To setup API key
-from src.youtube_to_audio import process_audio
 from src.audio_processors.youtube_audio_processor import YouTubeAudioProcessor
 
 log_level = os.environ.get('LOG_LEVEL', 'INFO')
@@ -22,18 +21,13 @@ def main(video_urls, voice_name, filename, description=""):
         logger.info(f"Processing video {index + 1}/{len(video_urls)}...")
         processing_start_time = time.time()
         folder_name = f"audio_clips/{voice_name}_{start_time}/{index}"
-        YouTubeAudioProcessor(video_url, folder_name, filename)
-        process_audio(video_url, folder_name, filename)
+
+        voice_files.extend(YouTubeAudioProcessor(video_url, folder_name, filename).process_audio())
 
         with open(f"{folder_name}/video_url.txt", "w") as file:
             file.write(video_url)
 
         # Add the voice files from this folder to the list
-        voice_files.extend([
-            os.path.join(folder_name, f) 
-            for f in os.listdir(folder_name) 
-            if f.startswith(filename) and "_part" in f
-        ])
         logger.info(f"Finished video {index + 1}/{len(video_urls)}. Time taken: {time.time() - processing_start_time} seconds")
 
     # Total files before filtering
