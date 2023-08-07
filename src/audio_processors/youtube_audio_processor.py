@@ -16,9 +16,8 @@ class YouTubeAudioProcessor(AudioProcessor):
     def __init__(self, 
                  url: str, 
                  folder_path: str, 
-                 filename: str, 
-                 audio_file_type: Optional[str] = None):
-        super().__init__(folder_path, filename, audio_file_type if audio_file_type else AUDIO_FILE_TYPE)
+                 filename: str):
+        super().__init__(folder_path, filename)
         if not self.is_valid_url(url):
             logger.info("You provided an invalid URL.")
             raise Exception("You provided an invalid URL")
@@ -26,14 +25,29 @@ class YouTubeAudioProcessor(AudioProcessor):
 
     def get_audio(self) -> None:
         filename = os.path.join(self.folder_path, self.filename)
+        filename_timestamped = f"{filename}_{time.strftime('%Y%m%d%H%M%S')}.{AUDIO_FILE_TYPE}"
 
         if not os.path.exists(self.folder_path):
             os.makedirs(self.folder_path)
 
-        self.filename = self.download_audio(self.url, filename)
+        self.filename = self.download_audio(filename_timestamped)
 
-    def download_audio(self, url: str, filename: str) -> str:
-        yt = YouTube(url)
-        filename_timestamped = f"{filename}_{time.strftime('%Y%m%d%H%M%S')}.{self.audio_file_type}"
-        yt.streams.filter(only_audio=True).first().download(filename=filename_timestamped)
-        return filename_timestamped
+    def download_audio(self, filename: str) -> str:
+        """
+        Downloads a YouTube video from the given URL and saves it to the specified output path or the current directory.
+
+        Args:
+            url: The URL of the YouTube video to download.
+            output_path: The path where the downloaded video will be saved. If None, the video will be saved to the current
+            directory.
+        Returns:
+            filename
+        """
+        yt = YouTube(self.url)
+
+        video_stream = yt.streams.filter(only_audio=True).first()
+
+        video_stream.download(filename=filename)
+        print(f"Video successfully downloaded to {filename}")
+
+        return filename

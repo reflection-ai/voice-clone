@@ -9,6 +9,8 @@ logging.basicConfig(level=getattr(logging, log_level),
                     format='%(asctime)s %(levelname)s %(message)s')
 logger = logging.getLogger()
 
+MAX_SIZE = 7 * 1024 * 1024
+
 def get_file_size(file_path: str) -> int:
     """
     Returns the size of the file at the given path.
@@ -21,7 +23,7 @@ def get_file_size(file_path: str) -> int:
     """
     return os.path.getsize(file_path)
 
-def split_audio_file(file_path: str, max_size: int = 7 * 1024 * 1024) -> List[str]:
+def split_audio_file(file_path: str, max_size: int = MAX_SIZE) -> List[str]:
     """
     Splits an audio file into multiple parts if its size exceeds the specified max size. 
     Each part will be approximately of max_size or less.

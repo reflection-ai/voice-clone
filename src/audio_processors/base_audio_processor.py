@@ -11,16 +11,18 @@ logging.basicConfig(level=getattr(logging, log_level),
 logger = logging.getLogger()
 
 class AudioProcessor(ABC):
-    def __init__(self, folder_path: str, filename: str, audio_file_type: str):
+    def __init__(self, folder_path: str, filename_prefix: str):
+        """
+        folder_path [str]: path where audio is to be saved
+        filename [str]: filename_prefix where audio filename will start with
+        """
         self.folder_path = folder_path
-        self.filename = filename
-        self.audio_file_type = audio_file_type
+        self.filename = filename_prefix
 
     @abstractmethod
     def get_audio(self) -> None:
         """
-        Gets the audio file and saves to disk, 
-        setting the filename attribute to the file
+        Gets the audio file and saves to disk, setting the filename attribute to the file
         """
         pass
 
@@ -34,9 +36,7 @@ class AudioProcessor(ABC):
 
     def split_audio(self) -> List[str]:
         filename_with_ext = self.filename
-
         logger.info(f"File size of {filename_with_ext} is {get_file_size(filename_with_ext)} bytes.")
-
         return split_audio_file(filename_with_ext)
 
     def process_audio(self) -> List[str]:
