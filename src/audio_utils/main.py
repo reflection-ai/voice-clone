@@ -3,11 +3,12 @@ from pydub import AudioSegment
 from pydub.utils import mediainfo
 import logging
 from typing import List
-
+import wave
 log_level = os.environ.get('LOG_LEVEL', 'INFO')
 logging.basicConfig(level=getattr(logging, log_level),
                     format='%(asctime)s %(levelname)s %(message)s')
 logger = logging.getLogger()
+
 
 MAX_SIZE = 7 * 1024 * 1024
 
@@ -65,3 +66,11 @@ def split_audio_file(file_path: str, max_size: int = MAX_SIZE) -> List[str]:
 
     logger.info(f"File split into {len(parts)} parts.")
     return parts
+
+
+def is_wav_file(file_path: str) -> bool:
+    try:
+        with wave.open(file_path, 'r') as _:
+            return True
+    except wave.Error:
+        return False
