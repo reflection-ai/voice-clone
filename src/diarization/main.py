@@ -1,4 +1,5 @@
 import os
+import os
 import subprocess
 import pandas as pd
 from typing import Optional, List, TypedDict
@@ -8,7 +9,6 @@ from whisperx.types import AlignedTranscriptionResult, TranscriptionResult
 from whisperx.diarize import DiarizationPipeline, assign_word_speakers
 import json
 import src.audio_utils.main as audio_utils
-
 
 class SingleSegmentSpeaker(TypedDict):
     """
@@ -70,6 +70,13 @@ class Diarization:
             diarization_result, aligned_segments
         )
         results_segments_w_speakers: List[SingleSegmentSpeaker] = []
+
+        with open("blah/AS.txt", 'w') as file:
+            file.write(json.dumps(aligned_segments, indent=4))
+
+        with open("blah/RS.txt", 'w') as file:
+            file.write(json.dumps(result_segments, indent=4))
+
         for result_segment in result_segments["segments"]:
             results_segments_w_speakers.append(
                 {
@@ -84,11 +91,6 @@ class Diarization:
     def transcribe(self) -> TranscriptionResult:
         """
         Transcribe an audio file using a speech-to-text model.
-
-        Args:
-            audio_file: Path to the audio file to transcribe.
-            model_name: Name of the model to use for transcription.
-            device: The device to use for inference (e.g., "cpu" or "cuda").
 
         Returns:
             A dictionary representing the transcript, including the segments, the language code, and the duration of the audio file.
@@ -130,8 +132,8 @@ class Diarization:
             A dictionary representing the aligned transcript segments.
         """
 
-        model_a, metadata = load_align_model(language_code=language_code, device=self.device)
-        result_aligned = align(iter(transcriptResults["segments"]), model_a, metadata, self.audio_file, self.device)
+        model_a, metadata = load_align_model(language_code=transcriptResults["language"], device=self.device)
+        result_aligned = align(transcriptResults["segments"], model_a, metadata, self.audio_file, self.device)
         return result_aligned
 
     def transcribe_and_diarize(
@@ -160,12 +162,17 @@ class Diarization:
         if self.audio_file == None:
             raise Exception("no audio file set")
 
-        if audio_utils.is_wav_file(self.audio_file):
+        if not audio_utils.is_wav_file(self.audio_file):
             self.audio_file = self.convert_to_wav(self.audio_file)
 
         transcript = self.transcribe()
+        with open("blah/transcript.txt", 'w') as file:
+            file.write(json.dumps(transcript, indent=4))
         aligned_segments = self.align_segments(transcript)
+        with open("blah/aligned_segments.txt", 'w') as file:
+            file.write(json.dumps(aligned_segments, indent=4))
         diarization_result = self.diarize()
+
         results_segments_w_speakers = self.assign_speakers(diarization_result, aligned_segments)
 
         return results_segments_w_speakers
@@ -173,6 +180,7 @@ class Diarization:
     def process_and_save(self, output_path: Optional[str] = None) -> List[SingleSegmentSpeaker]:
         results = self.transcribe_and_diarize()
 
+        print(results)
         if output_path:
             with open(os.path.join(output_path, 'results_segments_w_speakers.json'), 'w') as file:
                 json.dump(results, file, indent=4)
@@ -180,9 +188,8 @@ class Diarization:
         return results
 
 if __name__ == "__main__":
-    hf_token = ""
+    hf_token = "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"
     language_code = "en"
-    audio_file = ""
-    wav_auido_file = 'output.wav'
+    audio_file = "ALex hormozi testing_20230806111200_part4.wav"
     d = Diarization(hf_token, audio_file)
     d.process_and_save('blah')
