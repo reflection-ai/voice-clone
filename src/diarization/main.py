@@ -9,6 +9,10 @@ from whisperx.types import AlignedTranscriptionResult, TranscriptionResult
 from whisperx.diarize import DiarizationPipeline, assign_word_speakers
 import json
 import src.audio_utils.main as audio_utils
+from src.audio_processors.youtube_audio_processor import YouTubeAudioProcessor
+
+from dotenv import load_dotenv
+load_dotenv()
 
 class SingleSegmentSpeaker(TypedDict):
     """
@@ -188,8 +192,9 @@ class Diarization:
         return results
 
 if __name__ == "__main__":
-    hf_token = "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"
+    yt = YouTubeAudioProcessor("https://www.youtube.com/watch?v=-XE-OC2ZYB4", "temp", "blah")
+    yt.get_audio()
+    hf_token = os.getenv('HF_API_KEY') or ""
     language_code = "en"
-    audio_file = "ALex hormozi testing_20230806111200_part4.wav"
-    d = Diarization(hf_token, audio_file)
+    d = Diarization(hf_token, yt.filename)
     d.process_and_save('blah')
