@@ -192,7 +192,7 @@ class Diarization:
         return results
 
 if __name__ == "__main__":
-    yt = YouTubeAudioProcessor("https://www.youtube.com/watch?v=-XE-OC2ZYB4", "temp", "blah")
+    yt = YouTubeAudioProcessor("https://www.youtube.com/watch?v=-XE-OC2ZYB4", "", "why-so-sour")
     yt.get_audio()
     hf_token = os.getenv('HF_API_KEY') or ""
     language_code = "en"
