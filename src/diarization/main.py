@@ -2,7 +2,7 @@ import os
 import os
 import subprocess
 import pandas as pd
-from typing import Optional, List, TypedDict
+from typing import Optional, List, TypedDict, Dict
 import whisperx
 from whisperx import load_align_model, align
 from whisperx.types import AlignedTranscriptionResult, TranscriptionResult
@@ -10,6 +10,7 @@ from whisperx.diarize import DiarizationPipeline, assign_word_speakers
 import json
 import src.audio_utils.main as audio_utils
 from src.audio_processors.youtube_audio_processor import YouTubeAudioProcessor
+from copy import deepcopy
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -181,8 +182,10 @@ class Diarization:
 
         return results_segments_w_speakers
 
+
     def process_and_save(self, output_path: Optional[str] = None) -> List[SingleSegmentSpeaker]:
         results = self.transcribe_and_diarize()
+        results = compress_segments(results)
 
         print(results)
         if output_path:
@@ -190,6 +193,65 @@ class Diarization:
                 json.dump(results, file, indent=4)
 
         return results
+
+def get_speaker_parts( data: List[SingleSegmentSpeaker], speakers: str | List[str]) -> List[SingleSegmentSpeaker]:
+    if isinstance(speakers, str):
+        speakers = [speakers]
+
+    parts = [item for item in data if item['speaker'] in speakers]
+    return parts
+
+def rename_speakers(
+    data: List[SingleSegmentSpeaker],
+    new_speaker_name: str,
+    speakers_to_replace: Optional[List[str]] = None
+) -> List[SingleSegmentSpeaker]:
+    new_data = deepcopy(data)
+    for item in new_data:
+        if speakers_to_replace is None or item['speaker'] in speakers_to_replace:
+            item['speaker'] = new_speaker_name
+    return new_data
+
+def merge_segments(list1: List[SingleSegmentSpeaker], list2: List[SingleSegmentSpeaker]) -> List[SingleSegmentSpeaker]:
+    merged = list1 + list2
+    merged.sort(key=lambda x: (x['start'], x['end']))
+    return merged
+
+def compress_segments(segments: List[SingleSegmentSpeaker]) -> List[SingleSegmentSpeaker]:
+    """
+    Compresses a list of speaker segments by merging consecutive segments spoken by the same speaker.
+
+    This method takes a list of segments, each containing start and end times, text, and speaker ID, 
+    and merges consecutive segments that are spoken by the same speaker. The start time of the first segment 
+    and the end time of the last segment in a sequence of consecutive segments are used for the merged segment's 
+    start and end times, and the texts are concatenated.
+
+    Args:
+        segments: A list of speaker segments with start time, end time, text, and speaker ID.
+
+    Returns:
+        A compressed list of speaker segments with merged consecutive segments spoken by the same speaker.
+    """
+    if not segments:
+        return []
+
+    compressed_segments: List[SingleSegmentSpeaker] = [segments[0]]
+
+    for segment in segments[1:]:
+        last_segment = compressed_segments[-1]
+
+        if last_segment["speaker"] == segment["speaker"]:
+            last_segment["end"] = segment["end"]
+            last_segment["text"] += " " + segment["text"]
+        else:
+            compressed_segments.append(segment)
+
+    return compressed_segments
+
+def transform_data(data: List[SingleSegmentSpeaker]) -> Dict[str, List[Dict[str, str]]]:
+    return {
+        "conversations": [{"from": item["speaker"], "value": item["text"]} for item in data]
+    }
 
 if __name__ == "__main__":
     yt = YouTubeAudioProcessor("https://www.youtube.com/watch?v=-XE-OC2ZYB4", "", "why-so-sour")
